@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Removed the filter form from here -->
+
+<div class="row text-center mb-4">
+  <div class="col-md-4">
+    <div class="card bg-success text-white shadow">
+      <div class="card-body">
+        <h5>Total Expenses</h5>
+        <h3>₹{{ total }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New structure to place the filter opposite the '+ Add Expense' button -->
+<div class="row align-items-end mb-3">
+    <div class="col-6">
+        <h2>Your Expenses</h2>
+        <a href="{% url 'et:add_expense' %}" class="btn btn-primary">+ Add Expense</a>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+        <!-- Filter Form on the right. align-items-center will vertically center the input and button. -->
+        <form method="GET" class="d-flex align-items-center">
+            <input type="month" name="month" class="form-control d-inline me-2" style="width:200px;" />
+            <button type="submit" class="btn btn-secondary">Filter</button>
+        </form>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped">
+  <thead class="table-dark">
+    <tr><th>Title</th><th>Amount</th><th>Date</th><th>Category</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    {% for e in expenses %}
+    <tr>
+      <td>{{ e.title }}</td>
+      <td>₹{{ e.amount }}</td>
+      <td>{{ e.date }}</td>
+      <td>{{ e.category }}</td>
+      <td>
+        <a href="{% url 'et:edit_expense' e.id %}" class="btn btn-sm btn-warning">Edit</a>
+        <a href="{% url 'et:delete_expense' e.id %}" class="btn btn-sm btn-danger">Delete</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="text-center">No expenses found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="row mt-5">
+  <div class="col-md-6">
+    <h5>Monthly Expense</h5>
+    <canvas id="barChart"></canvas>
+  </div>
+  <div class="col-md-6">
+    <h5>Expenses by Category</h5>
+    <canvas id="categoryChart"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script>
+const barLabels = {{ line_labels|safe }};
+const barExpenseData = {{ line_expense_data|safe }};
+const catLabels = {{ cat_labels|safe }};
+const catData = {{ cat_data|safe }};
+
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: barLabels,
+    datasets: [{
+      label: 'Monthly Expense',
+      data: barExpenseData,
+      backgroundColor: 'rgba(255,99,132,0.6)',
+      borderColor: 'rgba(255,99,132,1)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: { y: { beginAtZero: true } }
+  }
+});
+
+new Chart(document.getElementById('categoryChart'), {
+  type: 'pie',
+  plugins: [ChartDataLabels],
+  data: {
+    labels: catLabels,
+    datasets: [{
+      data: catData,
+      backgroundColor: ['#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40','#E46651','#305380','#56b87d','#f5af19']
+    }]
+  },
+  options: {
+    plugins: {
+      datalabels: {
+        formatter: (value, ctx) => {
+          let sum = 0;
+          let dataArr = ctx.chart.data.datasets[0].data;
+          dataArr.map(data => sum += data);
+          return (value * 100 / sum).toFixed(1) + "%";
+        },
+        color: '#fff'
+      },
+      legend: { position: 'top' }
+    }
+  }
+});
+</script>
+{% endblock %}

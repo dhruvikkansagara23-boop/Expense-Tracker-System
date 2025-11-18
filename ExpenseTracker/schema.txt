@@ -1,0 +1,40 @@
+===== SCHEMA =====
+----------------------------------------------------------------------------------------------
+       
+Roles
+Field           Type            Key     Description
+
+id              Integer         PK      Unique ID for each role
+name            Varchar(50)             Role name (e.g., Admin, User)
+created_at      DateTime                Timestamp when role was created
+
+----------------------------------------------------------------------------------------------
+Users
+Field           Type            Key     Description
+
+id              Integer         PK      Unique ID for each user
+email           Varchar(255)    Unique  User email (used for login)
+password        Varchar(255)            Hashed password
+role_id         Integer         FK -> Roles.id  Role assigned to the user
+created_at      DateTime                Account creation timestamp
+
+----------------------------------------------------------------------------------------------
+Categories
+Field           Type            Key     Description
+
+id              Integer         PK      Unique category ID
+name            Varchar(100)            Category name (e.g., Food, Travel)
+
+----------------------------------------------------------------------------------------------
+Expenses
+Field           Type            Key     Description
+
+id              Integer         PK      Unique expense ID
+title           Varchar(255)            Short title for the expense
+amount          Decimal(10,2)           Expense amount
+date            Date                    Expense date
+description     Text                    Optional notes about the expense
+category_id     Integer         FK -> Categories.id     Linked category
+user_id         Integer         FK -> Users.id  Linked user (expense owner)
+
+----------------------------------------------------------------------------------------------

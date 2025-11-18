@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Add Category</h3>
+<form method="POST">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label>Name</label>
+    <input name="name" class="form-control" required>
+  </div>
+  <button class="btn btn-success">Add</button>
+</form>
+{% endblock %}

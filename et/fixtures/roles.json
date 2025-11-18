@@ -1,0 +1,16 @@
+[
+  {
+    "model": "et.role",
+    "pk": 1,
+    "fields": {
+      "name": "Admin"
+    }
+  },
+  {
+    "model": "et.role",
+    "pk": 2,
+    "fields": {
+      "name": "Customer"
+    }
+  }
+]

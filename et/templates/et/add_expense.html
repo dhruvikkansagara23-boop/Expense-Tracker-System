@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h3 class="text-center mb-4">Add New Expense</h3>
+
+          <form method="POST" action="/et/add_expense/">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="title" class="form-label">Title</label>
+              <input type="text" name="title" id="title" class="form-control" placeholder="Expense title" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="amount" class="form-label">Amount (₹)</label>
+              <input type="number" name="amount" id="amount" class="form-control" placeholder="Enter amount" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="date" class="form-label">Date</label>
+              <input type="date" name="date" id="date" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="category" class="form-label">Category</label>
+              <select name="category" id="category" class="form-select" required>
+                <option value="">Select category</option>
+                {% for c in categories %}
+                  <option value="{{ c.id }}">{{ c.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea name="description" id="description" rows="3" class="form-control" placeholder="Optional details"></textarea>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success">Save Expense</button>
+            </div>
+          </form>
+
+          {% if success %}
+            <div class="alert alert-success mt-3">{{ success }}</div>
+          {% elif error %}
+            <div class="alert alert-danger mt-3">{{ error }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

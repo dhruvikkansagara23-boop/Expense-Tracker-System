@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Edit Expense</h3>
+<form method="POST">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label>Title</label>
+    <input class="form-control" name="title" value="{{ expense.title }}" required>
+  </div>
+  <div class="mb-3">
+    <label>Amount</label>
+    <input class="form-control" name="amount" value="{{ expense.amount }}" type="number" step="0.01" required>
+  </div>
+  <div class="mb-3">
+    <label>Date</label>
+    <input class="form-control" name="date" value="{{ expense.date }}" type="date" required>
+  </div>
+  <div class="mb-3">
+    <label>Category</label>
+    <select name="category" class="form-control">
+      {% for c in categories %}
+      <option value="{{ c.id }}" {% if expense.category.id == c.id %}selected{% endif %}>{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label>Description</label>
+    <textarea name="description" class="form-control">{{ expense.description }}</textarea>
+  </div>
+  <button class="btn btn-success">Update</button>
+</form>
+{% endblock %}

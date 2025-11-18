@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  html, body {
+      height: 100%;
+      background-color: #121212 !important;
+      color: #e0e0e0 !important;
+  }
+  .signup-card {
+      background-color: #1e1e1e !important;
+      border: none;
+      color: #e0e0e0 !important;
+  }
+  .form-control {
+      background-color: #2c2c2c;
+      border: 1px solid #3a3a3a;
+      color: #e0e0e0;
+  }
+  .form-control:focus {
+      background-color: #2c2c2c;
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      color: #e0e0e0;
+  }
+  .btn-primary {
+      background-color: #0d6efd !important;
+      border-color: #0d6efd !important;
+  }
+  /* Use the desired color for secondary text */
+  .text-secondary {
+      color: rgba(222, 226, 230, 0.75) ;
+  }
+  a.text-primary {
+      color: #4da3ff !important;
+  }
+  a.text-primary:hover {
+      color: #80bfff !important;
+  }
+</style>
+
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-4 col-md-6 col-10">
+        <div class="card shadow-lg signup-card">
+          <div class="card-body p-5">
+            <div class="text-center mb-5">
+              <h2 class="text-white">REGISTER</h2>
+              <p class="text-secondary">Please Register for Login</p>
+            </div>
+
+            {% if error %}
+              <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            {% if success %}
+              <div class="alert alert-success">{{ success }}</div>
+            {% endif %}
+
+            {% if password_msg %}
+              <div class="alert alert-warning text-dark">
+                ⚠️ {{ password_msg }}
+                {% if weak_password %}
+                  <form method="POST" action="{% url 'et:signup' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="email" value="{{ email }}">
+                    <input type="hidden" name="password" value="{{ password }}">
+                    <input type="hidden" name="confirm-password" value="{{ confirm }}">
+                    <button type="submit" name="force" value="yes" class="btn btn-warning w-100 mt-2">
+                      Proceed Anyway
+                    </button>
+                  </form>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'et:signup' %}">
+              {% csrf_token %}
+              <div class="mb-4">
+                <input name="email" type="email" class="form-control form-control-lg"
+                       id="email" placeholder="Email address"
+                       value="{{ email|default:'' }}" required>
+              </div>
+
+              <div class="mb-4">
+                <input name="password" type="password" class="form-control form-control-lg"
+                       id="password" placeholder="Password" required>
+              </div>
+
+              <div class="mb-4">
+                <input name="confirm-password" type="password" class="form-control form-control-lg"
+                       id="confirm-password" placeholder="Confirm Password" required>
+              </div>
+
+              <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
+              </div>
+            </form>
+
+            <p class="text-center text-secondary">
+              Already registered?
+              <a href="{% url 'et:login' %}" class="text-primary text-decoration-none">Log in</a>
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
